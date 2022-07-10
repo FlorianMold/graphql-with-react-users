@@ -119,6 +119,7 @@ const mutation = new GraphQLObjectType({
         firstName: { type: new GraphQLNonNull(GraphQLString) },
         /** NonNull means that we have to provide a age. */
         age: { type: new GraphQLNonNull(GraphQLInt) },
+        /** Company can be null. */
         companyId: { type: GraphQLString },
       },
       /**
@@ -137,17 +138,35 @@ const mutation = new GraphQLObjectType({
       },
     },
     deleteUser: {
+      /** The return type. */
       type: UserType,
       /** We need the id to delete the user (GraphQLNonNull). */
       args: {
         id: { type: new GraphQLNonNull(GraphQLString) },
       },
-      resolve(parentValue, {id}) {
+      resolve(parentValue, { id }) {
         return axios
           .delete(`http://localhost:3000/users/${id}`)
           .then((res) => res.data);
-      }
-    }
+      },
+    },
+    editUser: {
+      /** The return type. */
+      type: UserType,
+      args: {
+        /** We need the id to update the user. */
+        id: { type: new GraphQLNonNull(GraphQLString) },
+        /** The firstName, age, companyId are optional */
+        firstName: { type: GraphQLString },
+        age: { type: GraphQLInt },
+        companyId: { type: GraphQLString },
+      },
+      resolve(parentValue, args) {
+        return axios
+          .patch(`http://localhost:3000/users/${args.id}`, args)
+          .then((res) => res.data);
+      },
+    },
   },
 });
 
