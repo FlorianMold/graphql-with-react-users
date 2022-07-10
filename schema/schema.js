@@ -8,6 +8,7 @@ const {
   GraphQLInt,
   /** GraphQLSchema takes in a root-query and returns a GraphQLSchema instance. */
   GraphQLSchema,
+  GraphQLList,
 } = graphql;
 
 const CompanyType = new GraphQLObjectType({
@@ -16,6 +17,15 @@ const CompanyType = new GraphQLObjectType({
     id: { type: GraphQLString },
     name: { type: GraphQLString },
     description: { type: GraphQLString },
+    users: {
+      type: new GraphQLList(UserType),
+      /** The parentValue is the instance of the company we are currently looking at. */
+      resolve(parentValue, args) {
+        return axios
+          .get(`http://localhost:3000/companies/${parentValue.id}/users`)
+          .then(res => res.data);
+      }
+    }
   }
 });
 
