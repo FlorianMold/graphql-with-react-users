@@ -1,5 +1,6 @@
 const graphql = require('graphql');
-const _ = require('lodash');
+const axios = require('axios');
+const { response } = require('express');
 
 const {
   /**  */
@@ -10,13 +11,6 @@ const {
   GraphQLSchema,
 } = graphql;
 
-/**
- * Mock Users
- */
-const users = [
-  {id: '23', firstName: 'Bill', age: 20},
-  {id: '47', firstName: 'Sam', age: 21}
-]
 
 /**
  * All of the users in our application look like this.
@@ -53,8 +47,11 @@ const RootQuery = new GraphQLObjectType({
        * @param {*} args 
        */
       resolve(parentValue, args) {
-        /** Go through all users and find the user with the id from args. */
-        return _.find(users, {id: args.id});
+        console.log(parentValue)
+        /** Fetch the user with the given id. */
+        return axios.get(`http://localhost:3000/users/${args.id}`)
+        /** Axios returns the data wrapped with data-property, we remove the data-property here. */
+        .then(res => res.data);
       }
     }
   }
