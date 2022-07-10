@@ -39,8 +39,20 @@ const UserType = new GraphQLObjectType({
     age: {type: GraphQLInt},
     company: {
       type: CompanyType,
+      /**
+       * The parentValue is the value of the user we resolved. With 
+       * that information, we can now resolve the company.
+       * 
+       * @param {*} parentValue 
+       * @param {*} args 
+       * @returns 
+       */
+      resolve(parentValue, args) {
+        return axios.get(`http://localhost:3000/companies/${parentValue.companyId}`)
+        .then(res => res.data);
     }
   }
+}
 });
 
 /**
@@ -58,7 +70,6 @@ const RootQuery = new GraphQLObjectType({
        * @param {*} args 
        */
       resolve(parentValue, args) {
-        console.log(parentValue)
         /** Fetch the user with the given id. */
         return axios.get(`http://localhost:3000/users/${args.id}`)
         /** Axios returns the data wrapped with data-property, we remove the data-property here. */
