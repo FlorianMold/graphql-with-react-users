@@ -1,11 +1,22 @@
 const graphql = require('graphql');
+const _ = require('lodash');
 
 const {
   /**  */
   GraphQLObjectType,
   GraphQLString,
   GraphQLInt,
+  /** GraphQLSchema takes in a root-query and returns a GraphQLSchema instance. */
+  GraphQLSchema,
 } = graphql;
+
+/**
+ * Mock Users
+ */
+const users = [
+  {id: 23, firstName: 'Bill', age: 20},
+  {id: 47, firstName: 'Sam', age: 21}
+]
 
 /**
  * All of the users in our application look like this.
@@ -36,9 +47,19 @@ const RootQuery = new GraphQLObjectType({
     user: {
       type: UserType,
       args: {id: {type: GraphQLString}},
+      /**
+       * If the id is passed to the root-query, it will be available inside the resolve function.
+       * @param {*} parentValue 
+       * @param {*} args 
+       */
       resolve(parentValue, args) {
-
+        /** Go through all users and find the user with the id from args. */
+        return _.find(users, {id: args.id});
       }
     }
   }
+});
+
+module.exports = new GraphQLSchema({
+  query: RootQuery
 });

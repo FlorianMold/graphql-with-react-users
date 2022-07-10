@@ -1,6 +1,7 @@
 const express = require('express');
 /** The GraphQL Layer of the application. */
 const { graphqlHTTP } = require('express-graphql');
+const schema = require('./schema/schema');
 
 const app = express();
 
@@ -9,7 +10,8 @@ const app = express();
  */
 app.use('/graphql', graphqlHTTP({
   /** graphiql should only be used in a development environment */
-  graphiql: true
+  graphiql: true,
+  schema
 }));
 
 /** 
