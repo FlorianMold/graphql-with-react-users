@@ -17,10 +17,23 @@
       "firstName": "Nick",
       "age": "40",
       "companyId": "2"
+    },
+    {
+      "firstName": "Florian",
+      "age": 25,
+      "id": "w397Pxh"
     }
   ],
   "companies": [
-    { "id": "1", "name": "Apple", "description": "iphone"},
-    { "id": "2", "name": "Google", "description": "search"}
+    {
+      "id": "1",
+      "name": "Apple",
+      "description": "iphone"
+    },
+    {
+      "id": "2",
+      "name": "Google",
+      "description": "search"
+    }
   ]
 }

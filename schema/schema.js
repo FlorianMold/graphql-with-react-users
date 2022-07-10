@@ -9,6 +9,7 @@ const {
   /** GraphQLSchema takes in a root-query and returns a GraphQLSchema instance. */
   GraphQLSchema,
   GraphQLList,
+  GraphQLNonNull,
 } = graphql;
 
 const CompanyType = new GraphQLObjectType({
@@ -108,20 +109,37 @@ const RootQuery = new GraphQLObjectType({
 const mutation = new GraphQLObjectType({
   name: "Mutation",
   fields: {
+    /** The name of our mutation. */
     addUser: {
       /** The type refers to the type of data, that we return in the resolve-function. */
       type: UserType,
       /** The arguments for the resolve function. The arguments, which we need to create a user. */
       args: {
-        firstName: { type: GraphQLString },
-        age: { type: GraphQLInt },
+        /** NonNull means that we have to provide a firstName. */
+        firstName: { type: new GraphQLNonNull(GraphQLString) },
+        /** NonNull means that we have to provide a age. */
+        age: { type: new GraphQLNonNull(GraphQLInt) },
         companyId: { type: GraphQLString },
       },
-      resolve(parentValue, args) {},
+      /**
+       * In the resolve function, we undergo the operation to create the user.
+       *
+       * @param {*} parentValue
+       * @param {*} args
+       */
+      resolve(parentValue, { firstName, age }) {
+        return axios
+          .post(`http://localhost:3000/users`, {
+            firstName,
+            age,
+          })
+          .then((res) => res.data);
+      },
     },
   },
 });
 
 module.exports = new GraphQLSchema({
   query: RootQuery,
+  mutation,
 });
