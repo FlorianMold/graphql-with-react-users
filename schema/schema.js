@@ -1,6 +1,5 @@
 const graphql = require('graphql');
 const axios = require('axios');
-const { response } = require('express');
 
 const {
   /**  */
@@ -73,6 +72,15 @@ const RootQuery = new GraphQLObjectType({
         /** Fetch the user with the given id. */
         return axios.get(`http://localhost:3000/users/${args.id}`)
         /** Axios returns the data wrapped with data-property, we remove the data-property here. */
+        .then(res => res.data);
+      }
+    },
+    company: {
+      type: CompanyType,
+      /** Whenever someone accesses this field, we expect that the is passed as an argument. */
+      args: {id: {type: GraphQLString}},
+      resolve(parentValue, args) {
+        return axios.get(`http://localhost:3000/companies/${args.id}`)
         .then(res => res.data);
       }
     }
