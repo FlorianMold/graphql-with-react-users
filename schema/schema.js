@@ -102,6 +102,26 @@ const RootQuery = new GraphQLObjectType({
   },
 });
 
+/**
+ * Create the root-mutation.
+ */
+const mutation = new GraphQLObjectType({
+  name: "Mutation",
+  fields: {
+    addUser: {
+      /** The type refers to the type of data, that we return in the resolve-function. */
+      type: UserType,
+      /** The arguments for the resolve function. The arguments, which we need to create a user. */
+      args: {
+        firstName: { type: GraphQLString },
+        age: { type: GraphQLInt },
+        companyId: { type: GraphQLString },
+      },
+      resolve(parentValue, args) {},
+    },
+  },
+});
+
 module.exports = new GraphQLSchema({
   query: RootQuery,
 });
